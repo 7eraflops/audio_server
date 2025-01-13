@@ -1,23 +1,17 @@
 #include "File_server.hpp"
 
-int main(int argc, char *argv[])
+int main()
 {
-    if (argc != 3)
-    {
-        std::cerr << "Usage: " << argv[0] << " <port> <shared_directory>" << std::endl;
-        return 1;
-    }
-
     try
     {
-        File_server server(std::stoi(argv[1]), argv[2]);
-        server.start();
+        File_server server(8080, "/home/teraflops/git/PS/audio_server/audio");
+        server.start(); // Will run as daemon by default
+        // Or server.start(false) to run in foreground
+        return 0;
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Server error: " << e.what() << std::endl;
+        syslog(LOG_ERR, "Server error: %s", e.what());
         return 1;
     }
-
-    return 0;
 }
